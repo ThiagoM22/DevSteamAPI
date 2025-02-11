@@ -21,6 +21,8 @@ namespace DevSteamAPI.Data
             modelBuilder.Entity<Jogo>().ToTable("Jogos");
             modelBuilder.Entity<Categoria>().ToTable("Categorias");
         }
+        public DbSet<DevSteamAPI.Model.Carrinho> Carrinho { get; set; } = default!;
+        public DbSet<DevSteamAPI.Model.ItemCarrinho> ItemCarrinho { get; set; } = default!;
 
 
     }

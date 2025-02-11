@@ -7,8 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DevSteamAPI.Model;
 using Microsoft.AspNetCore.Authorization;
+using DevSteamAPI.Data;
 
-namespace DevSteamAPI.Data
+namespace DevSteamAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -44,8 +45,24 @@ namespace DevSteamAPI.Data
             return jogo;
         }
 
+        // GET: api/Jogos/SearchByName
+        [HttpGet("SearchByName")]
+        [AllowAnonymous]
+        public async Task<ActionResult<IEnumerable<Jogo>>> GetJogosByName(string name)
+        {
+            var jogos = await _context.Jogos
+                .Where(j => j.Nome.Contains(name, StringComparison.OrdinalIgnoreCase))
+                .ToListAsync();
+
+            if (jogos == null || !jogos.Any())
+            {
+                return NotFound();
+            }
+
+            return jogos;
+        }
+
         // PUT: api/Jogos/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutJogo(Guid id, Jogo jogo)
         {
@@ -76,7 +93,6 @@ namespace DevSteamAPI.Data
         }
 
         // POST: api/Jogos
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Jogo>> PostJogo(Jogo jogo)
         {
